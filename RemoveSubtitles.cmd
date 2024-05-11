@@ -67,6 +67,11 @@ for /l %%i in (1,1,%n%) do (
 		rem echo filename %%~dpna fileextension %%~xa
 		setlocal DisableDelayedExpansion
 		"%mkvtoolnix_path:"=%mkvmerge.exe" -o "%%~dpna.tmp" --no-subtitles "%%a"
+		if errorlevel 1 (
+			echo Warnings/errors generated during removing subtitles
+		) else (
+			echo Successfully removed subtitles
+		)
 		move /y "%%~dpna.tmp" "%%a"
 		setLocal EnableDelayedExpansion
 	)
