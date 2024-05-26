@@ -9,7 +9,7 @@ set video_formats="-key1 .mkv"
 :: Full List of codecs https://github.com/FFmpeg/FFmpeg/blob/master/libavformat/matroska.c#L67
 :: set sub_codecs="-key1 arib_caption -key2 ass -key3 eia_608 -key4 hdmv_text_subtitle -key5 jacosub -key6 microdvd -key7 mov_text -key8 mpl2 -key9 pjs -key10 realtext -key11 sami -key12 srt -key13 ssa -key14 stl -key15 subrip -key16 subviewer -key17 subviewer1 -key18 text -key19 ttml -key20 vplayer -key21 webvtt -key22 dvb_subtitle -key23 dvb_teletext -key24 dvd_subtitle -key25 hdmv_pgs_subtitle -key26 xsub"
 :: Remove pgs and vob subs only
-set sub_codecs="-key1 hdmv_text_subtitle -key2 dvb_subtitle -key3 dvb_teletext -key4 dvd_subtitle -key5 hdmv_pgs_subtitle"
+set sub_codecs="-key1 xsub -key2 dvb_subtitle -key3 dvb_teletext -key4 dvd_subtitle -key5 hdmv_pgs_subtitle"
 
 :: Directory to scan
 :: Path format can be Network share or Drive name
@@ -119,19 +119,18 @@ goto :isdir
 
 :notdir
 
-		setlocal DisableDelayedExpansion
 		echo Direct file path not a directory "%plex_folder:"=%"
 		for /f "delims=" %%F in ("%plex_folder:"=%") do set "directory_path_name=%%~dpnF"
 
 		for /l %%i in (1,1,%codec_n%) do (
-			echo Enumerating all !codec_token[%%i]! under "%%a"
+			echo Enumerating all !codec_token[%%i]! under "%plex_folder:"=%"
 			for /f %%b in ('%root_path:"=%win-x64\Tools\FfMpeg\bin\ffmpeg.exe -i "%plex_folder:"=%" 2^>^&1 ^| find /c /i "Subtitle: !codec_token[%%i]!"') do (
 				if [%%b]==[0] (
-					echo !ESC![32m "%%a" does not have !codec_token[%%i]! !ESC![0m
+					echo !ESC![32m "%plex_folder:"=%" does not have !codec_token[%%i]! !ESC![0m
 				) else (
-					echo !ESC![31m "%%a" does have !codec_token[%%i]! !ESC![0m
+					echo !ESC![31m "%plex_folder:"=%" does have !codec_token[%%i]! !ESC![0m
 					if [%log_sub_codec_output%]==[1] (
-						echo "%%a" - "!codec_token[%%i]!" >> %root_path:"=%!codec_token[%%i]!.txt
+						echo "%plex_folder:"=%" - "!codec_token[%%i]!" >> %root_path:"=%!codec_token[%%i]!.txt
 					)
 					if [%remove_subtitles_codecs%]==[1] (
 						"%mkvtoolnix_path:"=%mkvmerge.exe" -o "%directory_path_name:"=%.tmp" --no-subtitles "%plex_folder:"=%"
@@ -145,7 +144,6 @@ goto :isdir
 				)
 			)
 		)
-		setLocal EnableDelayedExpansion
 
 goto :end_script
 
