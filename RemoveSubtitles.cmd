@@ -9,7 +9,7 @@ set video_formats="-key1 .mkv"
 :: Full List of codecs https://github.com/FFmpeg/FFmpeg/blob/master/libavformat/matroska.c#L67
 :: set sub_codecs="-key1 arib_caption -key2 ass -key3 eia_608 -key4 hdmv_text_subtitle -key5 jacosub -key6 microdvd -key7 mov_text -key8 mpl2 -key9 pjs -key10 realtext -key11 sami -key12 srt -key13 ssa -key14 stl -key15 subrip -key16 subviewer -key17 subviewer1 -key18 text -key19 ttml -key20 vplayer -key21 webvtt -key22 dvb_subtitle -key23 dvb_teletext -key24 dvd_subtitle -key25 hdmv_pgs_subtitle -key26 xsub"
 :: Remove pgs and vob subs only
-set sub_codecs="-key1 xsub -key2 dvb_subtitle -key3 dvb_teletext -key4 dvd_subtitle -key5 hdmv_pgs_subtitle"
+set sub_codecs="-key1 xsub -key2 dvb_subtitle -key3 dvb_teletext -key4 dvd_subtitle -key5 hdmv_pgs_subtitle -key6 hdmv_text_subtitle -key7 arib_caption -key8 eia_608 -key9 eia_708"
 
 :: Directory to scan
 :: Path format can be Network share or Drive name
@@ -69,7 +69,7 @@ set looping=%~8
 :script_arguments_not_defined
 
 if "%plex_folder:"=%"=="" (
-echo Input the Directory or Path you want to Remove Forced Subtitles flags on media items for example C:\path or you can use \\NAS\STORAGE\PATH
+echo Input the Directory or Path you want to Remove Subtitles codecs on media items for example C:\path or you can use \\NAS\STORAGE\PATH
 set /p "plex_folder="
 )
 
