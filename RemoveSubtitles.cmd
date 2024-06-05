@@ -120,7 +120,9 @@ goto :isdir
 :notdir
 
 		echo Direct file path not a directory "%plex_folder:"=%"
-		for /f "delims=" %%F in ("%plex_folder:"=%") do set "directory_path_name=%%~dpnF"
+		for /f "delims=" %%F in ("%plex_folder:"=%") do set "directory_path_name=%%~dpnF" && set "direct_file_name=%%~xF"
+		:: Fix for files that are pasted in that are not MKV format mkvmerge and tool only accept mkv files
+		if not "%direct_file_name:"=%" == ".mkv" set "plex_folder=%directory_path_name:"=%.mkv"
 
 		for /l %%i in (1,1,%codec_n%) do (
 			echo Enumerating all !codec_token[%%i]! under "%plex_folder:"=%"
