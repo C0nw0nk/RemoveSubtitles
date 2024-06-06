@@ -9,7 +9,7 @@ set video_formats="-key1 .mkv"
 :: Full List of codecs https://github.com/FFmpeg/FFmpeg/blob/master/libavformat/matroska.c#L67
 :: set sub_codecs="-key1 arib_caption -key2 ass -key3 eia_608 -key4 hdmv_text_subtitle -key5 jacosub -key6 microdvd -key7 mov_text -key8 mpl2 -key9 pjs -key10 realtext -key11 sami -key12 srt -key13 ssa -key14 stl -key15 subrip -key16 subviewer -key17 subviewer1 -key18 text -key19 ttml -key20 vplayer -key21 webvtt -key22 dvb_subtitle -key23 dvb_teletext -key24 dvd_subtitle -key25 hdmv_pgs_subtitle -key26 xsub"
 :: Remove pgs and vob subs only
-set sub_codecs="-key1 xsub -key2 dvb_subtitle -key3 dvb_teletext -key4 dvd_subtitle -key5 hdmv_pgs_subtitle -key6 hdmv_text_subtitle -key7 arib_caption -key8 eia_608 -key9 eia_708"
+set sub_codecs="-key1 xsub -key2 dvb_subtitle -key3 dvb_teletext -key4 dvd_subtitle -key5 hdmv_pgs_subtitle -key6 hdmv_text_subtitle -key7 arib_caption -key8 eia_608"
 
 :: Directory to scan
 :: Path format can be Network share or Drive name
@@ -55,7 +55,7 @@ TITLE C0nw0nk - Plex/Emby Remove Subtitles codecs
 :: Make script configurable via command line with arguements example
 :: "C:\path\RemoveSubtitles.cmd" "\\NAS\path" "sub_codecs" "remove_subtitles_codecs" "log_sub_codec_output" "check_for_sidecar" "pause_window" "wait_interval" "looping" 2^>nul
 :: Working example
-:: "C:\path\RemoveSubtitles.cmd" "\\NAS\path" "-key1 dvb_subtitle -key2 dvb_teletext -key3 dvd_subtitle -key4 hdmv_pgs_subtitle" "1" "1" "0" "1" "0" "0" 2^>nul
+:: "C:\path\RemoveSubtitles.cmd" "\\NAS\path" "-key1 xsub -key2 dvb_subtitle -key3 dvb_teletext -key4 dvd_subtitle -key5 hdmv_pgs_subtitle -key6 hdmv_text_subtitle -key7 arib_caption -key8 eia_608" "1" "1" "0" "1" "0" "0" 2^>nul
 
 if "%~1"=="" goto :script_arguments_not_defined
 set plex_folder="%~1"
@@ -299,6 +299,24 @@ echo aef69d48c864bcd72d15163897773d314187f6a9af350808719796
 	del "%root_path:"=%mkvtoolnix-64-bit-79.0.7z"
 )
 
+)
+
+if not exist "%root_path:"=%win-x64\Tools\FfMpeg\bin\ffmpeg.exe" (
+if not exist "ffmpeg-6.0-essentials_build.zip" (
+if not defined ffmpeg_zip (
+	set downloadurl=https://github.com/GyanD/codexffmpeg/releases/download/6.0/ffmpeg-6.0-essentials_build.zip
+	set file_name_to_extract=ffmpeg.exe
+	set delete_download=1
+	set ffmpeg_zip=true
+	goto :start_download
+)
+)
+if not exist "%root_path:"=%win-x64\Tools\FfMpeg\bin" (
+	mkdir "%root_path:"=%win-x64\Tools\FfMpeg\bin"
+)
+if exist "ffmpeg.exe" (
+	move /y "ffmpeg.exe" "%root_path:"=%win-x64\Tools\FfMpeg\bin\ffmpeg.exe"
+)
 )
 
 goto :start_exe
